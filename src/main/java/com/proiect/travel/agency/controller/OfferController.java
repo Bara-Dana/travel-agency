@@ -2,10 +2,8 @@ package com.proiect.travel.agency.controller;
 
 import com.proiect.travel.agency.dto.BuyOfferDto;
 import com.proiect.travel.agency.dto.OfferDto;
-import com.proiect.travel.agency.entity.DestinationModel;
 import com.proiect.travel.agency.entity.OfferModel;
 import com.proiect.travel.agency.entity.UserModel;
-import com.proiect.travel.agency.service.DestinationService;
 import com.proiect.travel.agency.service.OfferService;
 import com.proiect.travel.agency.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,7 @@ import java.util.List;
 
 @RestController
 public class OfferController {
-    @Autowired
-    private DestinationService destinationService;
+
 
     @Autowired
     private OfferService offerService;
@@ -34,44 +31,17 @@ public class OfferController {
 
     @PostMapping("/offers/addOffer")
     public ResponseEntity addOffer(@RequestBody OfferDto offerDto) {
-        DestinationModel destinationModel = destinationService.getById(offerDto.getDestinationId());
-        if (destinationModel == null) {
-            return new ResponseEntity("Destinatie invalida!", HttpStatus.BAD_REQUEST);
-        }
-        OfferModel offerModel = new OfferModel();
-        offerModel.setTitle(offerDto.getTitle());
-        offerModel.setDescription(offerDto.getDescription());
-        offerModel.setContactNumber(offerDto.getContactNumber());
-        offerModel.setPricePerNight(offerDto.getPricePerNight());
-        offerModel.setDestination(destinationModel);
-        offerModel.setImageUrl(offerDto.getImageUrl());
 
-        offerService.addOffer(offerModel);
-        return new ResponseEntity(offerModel, HttpStatus.OK);
+        offerService.addOffer(offerDto);
+        return new ResponseEntity(offerDto, HttpStatus.OK);
     }
 
     @PutMapping("/offers/editOffer/{id}")
-    public ResponseEntity editOffer(@PathVariable("id") Long id, @RequestBody OfferDto offerDto) {
+    public ResponseEntity editOffer(@PathVariable("id") Long id, @RequestBody OfferDto offerDto) throws Exception {
 
-        OfferModel offerModel = offerService.getOfferById(id);
-        if (offerModel == null) {
-            return new ResponseEntity(" Oferta nu exista", HttpStatus.BAD_REQUEST);
-        }
 
-        DestinationModel destinationModel = destinationService.getById(offerDto.getDestinationId());
-        if (destinationModel == null) {
-            return new ResponseEntity("Destinatie invalida!", HttpStatus.BAD_REQUEST);
-        }
-
-        offerModel.setTitle(offerDto.getTitle());
-        offerModel.setDescription(offerDto.getDescription());
-        offerModel.setContactNumber(offerDto.getContactNumber());
-        offerModel.setPricePerNight(offerDto.getPricePerNight());
-        offerModel.setDestination(destinationModel);
-        offerModel.setImageUrl(offerDto.getImageUrl());
-
-        offerService.editOffer(offerModel);
-        return new ResponseEntity(offerModel, HttpStatus.OK);
+        offerService.editOffer(id, offerDto);
+        return new ResponseEntity( HttpStatus.OK);
     }
 
     @DeleteMapping("/offers/deleteOffer/{id}")
@@ -106,7 +76,7 @@ public class OfferController {
         }
         customers.add(userModel);
         offerModel.setCustomers(customers);
-        offerService.editOffer(offerModel);
+
 
         return new ResponseEntity(offerModel, HttpStatus.OK);
     }

@@ -3,7 +3,7 @@ package com.proiect.travel.agency.dto;
 public class CountryDto {
     private Long id;
     private String name;
-    private Long continentId;
+    private String continent;
 
     public Long getId() {
         return id;
@@ -21,11 +21,11 @@ public class CountryDto {
         this.name = name;
     }
 
-    public Long getContinentId() {
-        return continentId;
+    public String getContinent() {
+        return continent;
     }
 
-    public void setContinentId(Long continentId) {
-        this.continentId = continentId;
+    public void setContinent(String continent) {
+        this.continent = continent;
     }
 }

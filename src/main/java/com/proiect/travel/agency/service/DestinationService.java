@@ -1,9 +1,9 @@
 package com.proiect.travel.agency.service;
 
-import com.proiect.travel.agency.entity.ContinentModel;
+
+import com.proiect.travel.agency.dto.DestinationDto;
 import com.proiect.travel.agency.entity.CountryModel;
 import com.proiect.travel.agency.entity.DestinationModel;
-import com.proiect.travel.agency.repository.ContinentRepository;
 import com.proiect.travel.agency.repository.CountryRepository;
 import com.proiect.travel.agency.repository.DestinationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,67 +18,58 @@ public class DestinationService {
     private DestinationRepository destinationRepository;
     @Autowired
     private CountryRepository countryRepository;
-    @Autowired
-    private ContinentRepository continentRepository;
 
-    public List<DestinationModel> getAll(){
+
+
+    public List<DestinationModel> getAll() {
         List<DestinationModel> travelList = destinationRepository.findAll();
         return travelList;
     }
 
-    public void addDestination(DestinationModel travelDestinationModel){
+    public void addDestination(DestinationDto destinationDto) {
 
-        ContinentModel continent = travelDestinationModel.getCountry().getContinent();
-        ContinentModel continentSearch = continentRepository.findByName(continent.getName());
-        if (continentSearch == null) {
-            continentRepository.save(continent);
-            continentSearch = continentRepository.findByName(continent.getName());
-        }
+        DestinationModel destination = new DestinationModel();
 
-        CountryModel country = travelDestinationModel.getCountry();
-        CountryModel countrySearch = countryRepository.findByName(country.getName());
-        if (countrySearch == null) {
-            country.setContinent(continentSearch);
-            countryRepository.save(country);
-            countrySearch = countryRepository.findByName(country.getName());
-        }
+        destination.setName(destinationDto.getName());
+        destination.setDescription(destinationDto.getDescription());
 
-        countrySearch.setContinent(continentSearch);
-        countryRepository.save(countrySearch);
+        CountryModel country = new CountryModel();
 
-        travelDestinationModel.setCountry(countrySearch);
+        country.setName(destinationDto.getCountryDto().getName());
+        country.setContinent(destinationDto.getCountryDto().getContinent());
 
-        destinationRepository.save(travelDestinationModel);
+       country =  countryRepository.save(country);
+        destination.setCountry(country);
+        destinationRepository.save(destination);
+    }
+
+
+    public void editDestination(Long destinationId, DestinationDto destinationDto) throws Exception {
+
+        Optional<DestinationModel> destinationModel = destinationRepository.findById(destinationId);
+
+        DestinationModel destination = destinationModel.orElseThrow(() -> new Exception("Destinatia cu id " + destinationId + "nu exista"));
+
+        destination.setName(destinationDto.getName());
+        destination.setDescription(destinationDto.getDescription());
+
+        Optional<CountryModel> countryModel = countryRepository.findById(destinationDto.getCountryDto().getId());
+
+        CountryModel country = countryModel.orElseThrow(() -> new Exception("Tara cu id " + destinationDto.getCountryDto().getId() + "nu exista"));
+        country.setName(destinationDto.getCountryDto().getName());
+        country.setContinent(destinationDto.getCountryDto().getContinent());
+        countryRepository.save(country);
+
+        destination.setCountry(country);
+        destinationRepository.save(destination);
+        ;
+
     }
 
     public DestinationModel getById(Long id) {
         Optional<DestinationModel> destinationOptional = destinationRepository.findById(id);
 
         return destinationOptional.get();
-    }
-
-    public void editDestination(DestinationModel travelDestinationModel) {
-        ContinentModel continent = travelDestinationModel.getCountry().getContinent();
-        ContinentModel continentSearch = continentRepository.findByName(continent.getName());
-        if (continentSearch == null) {
-            continentRepository.save(continent);
-            continentSearch = continentRepository.findByName(continent.getName());
-        }
-
-        CountryModel country = travelDestinationModel.getCountry();
-        CountryModel countrySearch = countryRepository.findByName(country.getName());
-        if (countrySearch == null) {
-            country.setContinent(continentSearch);
-            countryRepository.save(country);
-            countrySearch = countryRepository.findByName(country.getName());
-        }
-
-        countrySearch.setContinent(continentSearch);
-        countryRepository.save(countrySearch);
-
-        travelDestinationModel.setCountry(countrySearch);
-
-        destinationRepository.save(travelDestinationModel);
     }
 
     public void remove(Long id) {

@@ -1,10 +1,8 @@
 package com.proiect.travel.agency.controller;
 
 import com.proiect.travel.agency.dto.DestinationDto;
-import com.proiect.travel.agency.entity.CountryModel;
 import com.proiect.travel.agency.entity.DestinationModel;
 import com.proiect.travel.agency.entity.OfferModel;
-import com.proiect.travel.agency.service.ContinentService;
 import com.proiect.travel.agency.service.CountryService;
 import com.proiect.travel.agency.service.DestinationService;
 import com.proiect.travel.agency.service.UserService;
@@ -20,8 +18,6 @@ public class DestinationController {
     @Autowired
     private DestinationService destinationService;
 
-    @Autowired
-    private ContinentService continentService;
 
     @Autowired
     private CountryService countryService;
@@ -45,35 +41,16 @@ public class DestinationController {
 
     @PostMapping("/destination/addDestination")
     public ResponseEntity addDestination(@RequestBody DestinationDto destinationDto) {
-        CountryModel countryModel = countryService.getById(destinationDto.getCountryId());
-        if (countryModel == null) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
 
-        DestinationModel destination = new DestinationModel();
-        destination.setName(destinationDto.getName());
-        destination.setDescription(destinationDto.getDescription());
-        destination.setCountry(countryModel);
-
-        destinationService.addDestination(destination);
-        return new ResponseEntity(destination, HttpStatus.OK);
+        destinationService.addDestination(destinationDto);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("/destination/editDestination/{id}")
-    public ResponseEntity editDestination(@PathVariable("id") Long id, @RequestBody DestinationDto destinationDto) {
-        CountryModel countryModel = countryService.getById(destinationDto.getCountryId());
-        if (countryModel == null) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-        DestinationModel destination = new DestinationModel();
-        destination.setId(id);
-//        destination.setId(destinationDto.getId());
-        destination.setName(destinationDto.getName());
-        destination.setDescription(destinationDto.getDescription());
-        destination.setCountry(countryModel);
+    public ResponseEntity editDestination(@PathVariable("id") Long id, @RequestBody DestinationDto destinationDto) throws Exception {
 
-        destinationService.editDestination(destination);
-        return new ResponseEntity(destination, HttpStatus.OK);
+        destinationService.editDestination(id, destinationDto);
+        return new ResponseEntity( HttpStatus.OK);
     }
 
     @DeleteMapping("/destination/deleteDestination/{id}")

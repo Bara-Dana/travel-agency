@@ -4,7 +4,16 @@ public class DestinationDto {
     private Long id;
     private String name;
     private String description;
-    private Long countryId;
+    private CountryDto countryDto;
+
+
+    public CountryDto getCountryDto() {
+        return countryDto;
+    }
+
+    public void setCountryDto(CountryDto countryDto) {
+        this.countryDto = countryDto;
+    }
 
     public Long getId() {
         return id;
@@ -30,11 +39,4 @@ public class DestinationDto {
         this.description = description;
     }
 
-    public Long getCountryId() {
-        return countryId;
-    }
-
-    public void setCountryId(Long countryId) {
-        this.countryId = countryId;
-    }
 }

@@ -56,6 +56,7 @@ public class AuthController {
         this.userRepository.save(user);
         // Returnam raspuns catre client
         return new ResponseEntity("utilizator creat cu succes", HttpStatus.OK);
+
     }
 //    @PostMapping("/auth/login")
 //    public ResponseEntity loginWithToken(@RequestBody LoginModel loginModel) {

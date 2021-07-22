@@ -1,7 +1,7 @@
 package com.proiect.travel.agency.entity;
 
 import javax.persistence.*;
-import java.util.Objects;
+
 
 @Entity
 @Table(name = "country")
@@ -13,8 +13,16 @@ public class CountryModel {
 
     private String name;
 
-    @ManyToOne
-    private ContinentModel continent;
+    private String continent;
+
+
+    public String getContinent() {
+        return continent;
+    }
+
+    public void setContinent(String continent) {
+        this.continent = continent;
+    }
 
     public CountryModel() {
     }
@@ -38,30 +46,7 @@ public class CountryModel {
     public void setName(String name) {
         this.name = name;
     }
-
-    public ContinentModel getContinent() {
-        return continent;
-    }
-
-    public void setContinent(ContinentModel continent) {
-        this.continent = continent;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CountryModel that = (CountryModel) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
 }
+
+
+
