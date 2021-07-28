@@ -1,6 +1,7 @@
 package com.proiect.travel.agency.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.proiect.travel.agency.dto.OfferDto;
 import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
@@ -26,6 +27,19 @@ public class OfferModel {
     @ManyToMany
     @JoinTable(name = "offers_customers", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "offer_id")})
     private List<UserModel> customers = new ArrayList<>();
+
+
+    public OfferDto toOfferDto(){
+        OfferDto offerDto= new OfferDto();
+        offerDto.setId(this.id);
+        offerDto.setDescription(this.description);
+        offerDto.setTitle(this.title);
+        offerDto.setPricePerNight(this.pricePerNight);
+        offerDto.setImageUrl(imageUrl);
+        offerDto.setDestinationId(this.destination.getId());
+
+        return offerDto;
+    }
 
     public Long getId() {
         return id;

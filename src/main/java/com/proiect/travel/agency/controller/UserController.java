@@ -20,35 +20,23 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("login")
-    public String getLoginPage(){
-        return "login";
-    }
+//    @GetMapping("login")
+//    public String getLoginPage(){
+//        return "login";
+//    }
+//
+//    @GetMapping("register")
+//    public String register(Model model){
+//        model.addAttribute("user", new UserModel());
+//        return "register-page";
+//    }
 
-    @GetMapping("register")
-    public String register(Model model){
-        model.addAttribute("user", new UserModel());
-        return "register-page";
-    }
-
-    @PostMapping("/user/addUser")
-    public ResponseEntity addUser(@RequestBody UserDto userDto){
-
-        if (userService.checkUsername(userDto.getUsername())) {
-            return new ResponseEntity(userDto, HttpStatus.BAD_REQUEST);
-        }
-
-        UserModel newUser = new UserModel();
-        newUser.setUsername(userDto.getUsername());
-        newUser.setFirstName(userDto.getFirstName());
-        newUser.setLastName(userDto.getLastName());
-        newUser.setPassword(userDto.getPassword());
-        newUser.setEmail(userDto.getEmail());
-        newUser.setRole("ROLE_USER");
-
-        userService.addUser(newUser);
-        return new ResponseEntity(newUser, HttpStatus.OK);
-    }
+//    @PostMapping("/user/addUser")
+//    public ResponseEntity addUser(@RequestBody UserDto userDto){
+//
+//       userService.addUser(userDto);
+//        return new ResponseEntity( HttpStatus.OK);
+//    }
 
     @PutMapping("/user/editUser")
     public ResponseEntity editUser(@RequestBody UserDto userDto){

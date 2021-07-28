@@ -18,13 +18,13 @@ public class CountryService {
         this.countryRepository = countryRepository;
     }
 
-    public void addCountry(CountryDto countryDto) {
+    public CountryModel addCountry(CountryDto countryDto) {
 
         CountryModel country = new CountryModel();
         country.setName(countryDto.getName());
         country.setContinent(countryDto.getContinent());
 
-        countryRepository.save(country);
+       return countryRepository.save(country);
     }
 
     public void editCountry(Long countryId, CountryDto countryDto) throws Exception {
@@ -47,8 +47,18 @@ public class CountryService {
         return countryRepository.findById(id).get();
     }
 
-    public CountryModel getByName(String name) {
-        return countryRepository.findByName(name);
+
+    public CountryModel checkIfExist(CountryDto countryDto) {
+         Optional<CountryModel> countryModelOptional = countryRepository.findCountryByNameAndContinent(countryDto.getName(), countryDto.getContinent());
+        if
+        (countryModelOptional.isPresent()){
+            return countryModelOptional.get();
+
+        }else{
+            return  addCountry(countryDto);
+        }
+
+
     }
 
     public void deleteCountry(Long id) {

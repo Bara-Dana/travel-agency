@@ -4,15 +4,15 @@ public class DestinationDto {
     private Long id;
     private String name;
     private String description;
-    private CountryDto countryDto;
+    private CountryDto country;
 
 
-    public CountryDto getCountryDto() {
-        return countryDto;
+    public CountryDto getCountry() {
+        return country;
     }
 
-    public void setCountryDto(CountryDto countryDto) {
-        this.countryDto = countryDto;
+    public void setCountry(CountryDto country) {
+        this.country = country;
     }
 
     public Long getId() {

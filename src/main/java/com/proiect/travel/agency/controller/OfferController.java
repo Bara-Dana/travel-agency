@@ -30,7 +30,7 @@ public class OfferController {
     }
 
     @PostMapping("/offers/addOffer")
-    public ResponseEntity addOffer(@RequestBody OfferDto offerDto) {
+    public ResponseEntity addOffer(@RequestBody OfferDto offerDto) throws Exception {
 
         offerService.addOffer(offerDto);
         return new ResponseEntity(offerDto, HttpStatus.OK);
@@ -38,7 +38,6 @@ public class OfferController {
 
     @PutMapping("/offers/editOffer/{id}")
     public ResponseEntity editOffer(@PathVariable("id") Long id, @RequestBody OfferDto offerDto) throws Exception {
-
 
         offerService.editOffer(id, offerDto);
         return new ResponseEntity( HttpStatus.OK);
@@ -59,9 +58,6 @@ public class OfferController {
     @GetMapping("/offers/getOfferById/{id}")
     public ResponseEntity getOfferById (@PathVariable("id") Long id) {
         OfferModel offer = offerService.getOfferById(id);
-        if (offer == null) {
-            return new ResponseEntity("oferta nu exista", HttpStatus.BAD_REQUEST);
-        }
         return new ResponseEntity(offer, HttpStatus.OK);
     }
 
@@ -71,13 +67,15 @@ public class OfferController {
         List<UserModel> customers = offerModel.getCustomers();
 
         UserModel userModel = userService.getUserById(buyOfferDto.getUserId());
-        if (userModel == null) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
         customers.add(userModel);
         offerModel.setCustomers(customers);
 
-
         return new ResponseEntity(offerModel, HttpStatus.OK);
+    }
+
+    @GetMapping("offer/searchOffer/{destinationId}")
+    public ResponseEntity searchOfferByPrice(@RequestParam("price") Double price, @PathVariable("destinationId") Long destinationId){
+      List<OfferDto> offerDtoList =  offerService.getOfferByPrice(price, destinationId);
+      return new ResponseEntity(offerDtoList, HttpStatus.OK);
     }
 }

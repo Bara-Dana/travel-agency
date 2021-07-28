@@ -4,7 +4,6 @@ package com.proiect.travel.agency.service;
 import com.proiect.travel.agency.entity.UserModel;
 import com.proiect.travel.agency.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,11 +28,9 @@ public class UserDetailsService implements org.springframework.security.core.use
         String encodedPassword = userModel.getPassword();
         String role = userModel.getRole();
 
-        UserDetails userDetails = new User(name, encodedPassword,
+
+        return new User(name, encodedPassword,
                 Collections.singletonList(new SimpleGrantedAuthority(role)));
-
-
-        return userDetails;
     }
 }
 

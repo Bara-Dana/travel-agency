@@ -1,9 +1,11 @@
 package com.proiect.travel.agency.entity.auth;
 
+import com.proiect.travel.agency.dto.UserDto;
+
 public class ForgotPasswordModel {
     private String email;
 
-    public String getEmail() {
+    public UserDto getEmail() {
         return email;
     }
 

@@ -4,17 +4,22 @@ import com.proiect.travel.agency.dto.OfferDto;
 import com.proiect.travel.agency.entity.DestinationModel;
 import com.proiect.travel.agency.entity.OfferModel;
 import com.proiect.travel.agency.entity.UserModel;
+import com.proiect.travel.agency.repository.DestinationRepository;
 import com.proiect.travel.agency.repository.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OfferService {
     @Autowired
     private OfferRepository offerRepository;
+
+    @Autowired
+    private DestinationRepository destinationRepository;
 
     public List<UserModel> getCustomer(Long offerId){
         Optional<OfferModel> offerFound = offerRepository.findById(offerId);
@@ -24,17 +29,21 @@ public class OfferService {
         return customerModels;
     }
 
-    public void addOffer(OfferDto offerDto) {
+    public void addOffer( OfferDto offerDto) throws Exception {
 
         DestinationModel destinationModel = new DestinationModel();
 
         OfferModel offerModel = new OfferModel();
+
         offerModel.setTitle(offerDto.getTitle());
         offerModel.setDescription(offerDto.getDescription());
         offerModel.setContactNumber(offerDto.getContactNumber());
         offerModel.setPricePerNight(offerDto.getPricePerNight());
-        offerModel.setDestination(destinationModel);
         offerModel.setImageUrl(offerDto.getImageUrl());
+
+        DestinationModel destination = destinationRepository.findById(offerDto.getDestinationId()).orElseThrow(() -> new Exception("Destionation with id " + offerDto.getDestinationId() + "does not exist"));
+
+        offerModel.setDestination(destination);
 
         offerRepository.save(offerModel);
     }
@@ -62,8 +71,6 @@ public class OfferService {
 
     public OfferModel getOfferById(Long id) {
 
-
-
         return offerRepository.findById(id).orElse(null);
     }
 
@@ -76,4 +83,7 @@ public class OfferService {
     }
 
 
+    public List<OfferDto> getOfferByPrice(double maxPrice, long destinationId) {
+      return offerRepository.findOffers(maxPrice, destinationId).stream().map(OfferModel::toOfferDto).collect(Collectors.toList());
+    }
 }

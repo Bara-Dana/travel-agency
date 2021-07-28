@@ -1,8 +1,11 @@
 package com.proiect.travel.agency.service;
 
+import com.proiect.travel.agency.dto.UserDto;
 import com.proiect.travel.agency.entity.UserModel;
+import com.proiect.travel.agency.entity.auth.Utils;
 import com.proiect.travel.agency.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,23 +19,31 @@ import java.util.Optional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
+    public void registerUser(UserDto userDto) {
 
-    public void addUser(UserModel userModel){
+        UserModel newUser = new UserModel();
 
-        String password = userModel.getPassword();
+        newUser.setUsername(userDto.getUsername());
+        newUser.setFirstName(userDto.getFirstName());
+        newUser.setLastName(userDto.getLastName());
+        newUser.setPassword(userDto.getPassword());
+        newUser.setEmail(userDto.getEmail());
+        newUser.setRole("ROLE_USER");
 
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = bCryptPasswordEncoder.encode(password);
+        String encodedPassword = bCryptPasswordEncoder.encode(userDto.getPassword());
 
-        userModel.setPassword(encodedPassword);
-        userModel.setRole("ROLE_USER");
+        newUser.setPassword(encodedPassword);
+        newUser.setRole("ROLE_USER");
 
-        userRepository.save(userModel);
+        userRepository.save(newUser);
     }
 
-    public UserModel getCurrentUser(){
+    public UserModel getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -40,7 +51,7 @@ public class UserService {
         return userModelOptional.orElseThrow(() -> new IllegalArgumentException("No user found"));
     }
 
-    public boolean checkUsername(String username){
+    public boolean checkUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
@@ -55,11 +66,11 @@ public class UserService {
         userRepository.save(userModel);
     }
 
-    public UserModel getUserById(Long id){
+    public UserModel getUserById(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    public List<UserModel> getUsers(){
+    public List<UserModel> getUsers() {
         return userRepository.findAll();
     }
 
@@ -67,5 +78,14 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+
+    public void loadUserByEmail(UserDto userDto) {
+        userRepository.checkIfExistUserByEmail(userDto.getEmail());
+
+        String generatedPassword = Utils.getRandomString(6);
+        System.out.println(generatedPassword);
+        String encodedPassword = this.bCryptPasswordEncoder.encode(generatedPassword);
+        userDto.setPassword(encodedPassword);
+    }
 }
 

@@ -18,7 +18,8 @@ public class DestinationService {
     private DestinationRepository destinationRepository;
     @Autowired
     private CountryRepository countryRepository;
-
+    @Autowired
+    private CountryService countryService;
 
 
     public List<DestinationModel> getAll() {
@@ -33,12 +34,8 @@ public class DestinationService {
         destination.setName(destinationDto.getName());
         destination.setDescription(destinationDto.getDescription());
 
-        CountryModel country = new CountryModel();
+        CountryModel country = countryService.checkIfExist(destinationDto.getCountry());
 
-        country.setName(destinationDto.getCountryDto().getName());
-        country.setContinent(destinationDto.getCountryDto().getContinent());
-
-       country =  countryRepository.save(country);
         destination.setCountry(country);
         destinationRepository.save(destination);
     }
@@ -53,11 +50,11 @@ public class DestinationService {
         destination.setName(destinationDto.getName());
         destination.setDescription(destinationDto.getDescription());
 
-        Optional<CountryModel> countryModel = countryRepository.findById(destinationDto.getCountryDto().getId());
+        Optional<CountryModel> countryModel = countryRepository.findById(destinationDto.getCountry().getId());
 
-        CountryModel country = countryModel.orElseThrow(() -> new Exception("Tara cu id " + destinationDto.getCountryDto().getId() + "nu exista"));
-        country.setName(destinationDto.getCountryDto().getName());
-        country.setContinent(destinationDto.getCountryDto().getContinent());
+        CountryModel country = countryModel.orElseThrow(() -> new Exception("Tara cu id " + destinationDto.getCountry().getId() + "nu exista"));
+        country.setName(destinationDto.getCountry().getName());
+        country.setContinent(destinationDto.getCountry().getContinent());
         countryRepository.save(country);
 
         destination.setCountry(country);

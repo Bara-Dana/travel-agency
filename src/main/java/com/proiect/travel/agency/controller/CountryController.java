@@ -19,7 +19,7 @@ public class CountryController {
 
     @PostMapping("/country/addCountry")
     public ResponseEntity addCountry(@RequestBody CountryDto countryDto){
-        countryService.addCountry(countryDto);
+        countryService.checkIfExist(countryDto);
         return new ResponseEntity( HttpStatus.OK);
     }
 
