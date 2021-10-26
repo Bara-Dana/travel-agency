@@ -1,5 +1,6 @@
 package com.proiect.travel.agency.controller;
 
+import com.proiect.travel.agency.data.SearchOfferData;
 import com.proiect.travel.agency.dto.BuyOfferDto;
 import com.proiect.travel.agency.dto.OfferDto;
 import com.proiect.travel.agency.entity.OfferModel;
@@ -9,6 +10,7 @@ import com.proiect.travel.agency.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,11 +42,11 @@ public class OfferController {
     public ResponseEntity editOffer(@PathVariable("id") Long id, @RequestBody OfferDto offerDto) throws Exception {
 
         offerService.editOffer(id, offerDto);
-        return new ResponseEntity( HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping("/offers/deleteOffer/{id}")
-    public ResponseEntity deleteOfferById(@PathVariable("id") Long id){
+    public ResponseEntity deleteOfferById(@PathVariable("id") Long id) {
         offerService.deleteOfferById(id);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -56,26 +58,23 @@ public class OfferController {
     }
 
     @GetMapping("/offers/getOfferById/{id}")
-    public ResponseEntity getOfferById (@PathVariable("id") Long id) {
+    public ResponseEntity getOfferById(@PathVariable("id") Long id) {
         OfferModel offer = offerService.getOfferById(id);
         return new ResponseEntity(offer, HttpStatus.OK);
     }
 
     @PostMapping("/offers/buyOffer")
-    public ResponseEntity buyOffer(@RequestBody BuyOfferDto buyOfferDto){
+    public ResponseEntity buyOffer(@RequestBody BuyOfferDto buyOfferDto) {
         OfferModel offerModel = offerService.getOfferById(buyOfferDto.getOfferId());
-        List<UserModel> customers = offerModel.getCustomers();
-
         UserModel userModel = userService.getUserById(buyOfferDto.getUserId());
-        customers.add(userModel);
-        offerModel.setCustomers(customers);
-
         return new ResponseEntity(offerModel, HttpStatus.OK);
     }
+    @PostMapping("/offers/search")
+    public ResponseEntity searchOffer(@RequestBody SearchOfferData searchOffer) throws Exception {
+        List<OfferDto> offers = offerService.search(searchOffer);
 
-    @GetMapping("offer/searchOffer/{destinationId}")
-    public ResponseEntity searchOfferByPrice(@RequestParam("price") Double price, @PathVariable("destinationId") Long destinationId){
-      List<OfferDto> offerDtoList =  offerService.getOfferByPrice(price, destinationId);
-      return new ResponseEntity(offerDtoList, HttpStatus.OK);
+        return new ResponseEntity(offers, HttpStatus.OK);
     }
+
+
 }

@@ -50,13 +50,7 @@ public class CountryService {
 
     public CountryModel checkIfExist(CountryDto countryDto) {
          Optional<CountryModel> countryModelOptional = countryRepository.findCountryByNameAndContinent(countryDto.getName(), countryDto.getContinent());
-        if
-        (countryModelOptional.isPresent()){
-            return countryModelOptional.get();
-
-        }else{
-            return  addCountry(countryDto);
-        }
+        return countryModelOptional.orElseGet(() -> addCountry(countryDto));
 
 
     }
@@ -64,6 +58,7 @@ public class CountryService {
     public void deleteCountry(Long id) {
         countryRepository.deleteById(id);
     }
+
 
 
 }

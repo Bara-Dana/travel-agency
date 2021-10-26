@@ -13,7 +13,7 @@ public interface CountryRepository extends JpaRepository<CountryModel, Long> {
 
     @Query("from CountryModel as country where country.name = :countryName and country.continent = :continentName")
     Optional<CountryModel> findCountryByNameAndContinent(@Param("countryName") String countryName,
-                                                  @Param("continentName") String continentName);
+                                                         @Param("continentName") String continentName);
 
 
 }

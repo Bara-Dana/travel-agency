@@ -1,5 +1,6 @@
 package com.proiect.travel.agency.service;
 
+import com.proiect.travel.agency.data.SearchOfferData;
 import com.proiect.travel.agency.dto.OfferDto;
 import com.proiect.travel.agency.entity.DestinationModel;
 import com.proiect.travel.agency.entity.OfferModel;
@@ -7,8 +8,10 @@ import com.proiect.travel.agency.entity.UserModel;
 import com.proiect.travel.agency.repository.DestinationRepository;
 import com.proiect.travel.agency.repository.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +24,7 @@ public class OfferService {
     @Autowired
     private DestinationRepository destinationRepository;
 
-    public List<UserModel> getCustomer(Long offerId){
+    public List<UserModel> getCustomer(Long offerId) {
         Optional<OfferModel> offerFound = offerRepository.findById(offerId);
         OfferModel travelOfferModel = offerFound.get();
         List<UserModel> customerModels = travelOfferModel.getCustomers();
@@ -29,7 +32,7 @@ public class OfferService {
         return customerModels;
     }
 
-    public void addOffer( OfferDto offerDto) throws Exception {
+    public void addOffer(OfferDto offerDto) throws Exception {
 
         DestinationModel destinationModel = new DestinationModel();
 
@@ -54,7 +57,6 @@ public class OfferService {
 
         OfferModel offer = offerModel.orElseThrow(() -> new Exception("Oferta cu id " + offerId + "nu exista"));
 
-
         offer.setTitle(offerDto.getTitle());
         offer.setDescription(offerDto.getDescription());
         offer.setContactNumber(offerDto.getContactNumber());
@@ -65,25 +67,40 @@ public class OfferService {
         offerRepository.save(offer);
     }
 
-    public List<OfferModel> findOffers(double maxPrice, long destinationId) {
-        return offerRepository.findOffers(maxPrice, destinationId);
-    }
+//    public List<OfferModel> findOffers(double maxPrice, long destinationId) {
+//        return offerRepository.findOffers(maxPrice, destinationId);
+//    }
 
     public OfferModel getOfferById(Long id) {
 
         return offerRepository.findById(id).orElse(null);
     }
 
-    public void deleteOfferById (Long id) {
+    public void deleteOfferById(Long id) {
         offerRepository.deleteById(id);
     }
 
-    public List<OfferModel> getOffers (){
+    public List<OfferModel> getOffers() {
         return offerRepository.findAll();
     }
 
 
-    public List<OfferDto> getOfferByPrice(double maxPrice, long destinationId) {
-      return offerRepository.findOffers(maxPrice, destinationId).stream().map(OfferModel::toOfferDto).collect(Collectors.toList());
+//    public List<OfferDto> getOfferByPrice(double maxPrice, long destinationId) {
+//        return offerRepository.findOffers(maxPrice, destinationId).stream().map(OfferModel::toOfferDto).collect(Collectors.toList());
+//    }
+
+    public List<OfferDto> search(SearchOfferData searchOfferData) throws Exception {
+        double selection = searchOfferData.getSelection();
+        List<OfferModel> list = new ArrayList<>();
+        if (selection == 1) {
+            list = offerRepository.findPrice(Double.parseDouble(searchOfferData.getSearchCriteria()));
+
+        } else if (selection == 2) {
+            list = offerRepository.findDestination(searchOfferData.getSearchCriteria());
+        } else {
+            throw new Exception("Please chose 1 or 2");
+        }
+        System.out.println(list);
+        return list.stream().map(OfferModel::toOfferDto).collect(Collectors.toList());
     }
 }

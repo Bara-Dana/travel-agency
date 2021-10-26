@@ -1,6 +1,7 @@
 package com.proiect.travel.agency.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.proiect.travel.agency.dto.DestinationDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,12 +17,23 @@ public class DestinationModel {
     private String name;
     private String description;
 
-    @ManyToOne
+    @OneToOne
     private CountryModel country;
 
     @JsonIgnore
     @OneToMany(mappedBy = "destination")
     private List<OfferModel> offers = new ArrayList<>();
+
+    public DestinationDto toDestinationDto(){
+        DestinationDto destinationDto = new DestinationDto();
+        destinationDto.setId(this.id);
+        destinationDto.setName(this.name);
+        destinationDto.setDescription(this.description);
+        destinationDto.setCountry(this.country.toCountryDto());
+
+        return destinationDto;
+    }
+
 
     public Long getId() {
         return id;

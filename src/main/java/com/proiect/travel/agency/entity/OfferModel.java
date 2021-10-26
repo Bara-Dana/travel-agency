@@ -2,7 +2,6 @@ package com.proiect.travel.agency.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.proiect.travel.agency.dto.OfferDto;
-import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -104,5 +103,6 @@ public class OfferModel {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.proiect.travel.agency.controller;
 
 import com.proiect.travel.agency.dto.DestinationDto;
+import com.proiect.travel.agency.entity.CountryModel;
 import com.proiect.travel.agency.entity.DestinationModel;
 import com.proiect.travel.agency.entity.OfferModel;
 import com.proiect.travel.agency.service.CountryService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping
 public class DestinationController {
     @Autowired
     private DestinationService destinationService;
@@ -34,9 +36,10 @@ public class DestinationController {
     @GetMapping("/destination/getDestinations")
     public ResponseEntity getDestinations() {
 
-        List<DestinationModel> destinations = destinationService.getAll();
+        List<DestinationModel> destinations = destinationService.getDestination();
 
         return new ResponseEntity(destinations, HttpStatus.OK);
+
     }
 
     @PostMapping("/destination/addDestination")
@@ -65,4 +68,11 @@ public class DestinationController {
         List<OfferModel> offers = destination.getOffers();
         return new ResponseEntity(offers, HttpStatus.OK);
     }
+    @GetMapping("destination/previewDestination/{id}")
+    public ResponseEntity previewDestination(@PathVariable ("id") Long destinationId) throws Exception {
+        DestinationDto destinationDto = destinationService.getPreviewById(destinationId);
+
+        return new ResponseEntity(destinationDto, HttpStatus.OK);
+    }
+
 }

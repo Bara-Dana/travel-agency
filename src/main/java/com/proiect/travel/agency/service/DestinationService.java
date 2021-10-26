@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Service
 public class DestinationService {
+
     @Autowired
     private DestinationRepository destinationRepository;
     @Autowired
@@ -22,9 +23,8 @@ public class DestinationService {
     private CountryService countryService;
 
 
-    public List<DestinationModel> getAll() {
-        List<DestinationModel> travelList = destinationRepository.findAll();
-        return travelList;
+    public List<DestinationModel> getDestination() {
+        return destinationRepository.findAll();
     }
 
     public void addDestination(DestinationDto destinationDto) {
@@ -59,18 +59,23 @@ public class DestinationService {
 
         destination.setCountry(country);
         destinationRepository.save(destination);
-        ;
+
 
     }
 
-    public DestinationModel getById(Long id) {
-        Optional<DestinationModel> destinationOptional = destinationRepository.findById(id);
+    public DestinationDto getPreviewById(Long id) throws Exception {
+        DestinationModel destinationModel = destinationRepository.findById(id).orElseThrow(() -> new Exception("Destinatia cu id " + id + " nu exista"));
+        return destinationModel.toDestinationDto();
 
-        return destinationOptional.get();
     }
 
     public void remove(Long id) {
         destinationRepository.deleteById(id);
     }
+
+    public DestinationModel getById(Long id) {
+        return destinationRepository.findById(id).orElse(null);
+    }
+
 
 }

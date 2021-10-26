@@ -1,23 +1,22 @@
 package com.proiect.travel.agency.data;
 
 public class SearchOfferData {
-    private double maxPrice;
-    private int destinationId;
+    private int selection;
+    private String searchCriteria;
 
-    public double getMaxPrice() {
-        return maxPrice;
+    public double getSelection() {
+        return selection;
     }
 
-    public void setMaxPrice(double maxPrice) {
-        this.maxPrice = maxPrice;
+    public void setSelection(int selection) {
+        this.selection = selection;
     }
 
-    public int getDestinationId() {
-        return destinationId;
+    public String getSearchCriteria() {
+        return searchCriteria;
     }
 
-    public void setDestinationId(int destinationId) {
-        this.destinationId = destinationId;
+    public void setSearchCriteria(String searchCriteria) {
+        this.searchCriteria = searchCriteria;
     }
-
 }

@@ -1,5 +1,8 @@
 package com.proiect.travel.agency.entity;
 
+import com.proiect.travel.agency.dto.OfferDto;
+import com.proiect.travel.agency.dto.UserDto;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -19,6 +22,19 @@ public class UserModel {
 
     @ManyToMany(mappedBy = "customers")
     private List<OfferModel> offers;
+
+
+    public UserDto toUserDto(){
+        UserDto userDto= new UserDto();
+        userDto.setId(this.id);
+        userDto.setUserName(this.username);
+        userDto.setFirstName(this.firstName);
+        userDto.setLastName(this.lastName);
+        userDto.setEmail(this.email);
+        userDto.setPassword(this.password);
+
+        return userDto;
+    }
 
     public Long getId() {
         return id;

@@ -10,9 +10,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private UserService userService;
@@ -28,22 +30,21 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/auth/register")
+    @PostMapping("/register")
     public ResponseEntity register(@RequestBody UserDto userDto) {
 
         userService.registerUser(userDto);
-        return new ResponseEntity("utilizator creat cu succes", HttpStatus.OK);
+        return new ResponseEntity("Utilizator creat cu succes", HttpStatus.OK);
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity login(@RequestBody UserDto userDto) {
-
-        userService.loadUserByEmail(userDto);
-        return new ResponseEntity(HttpStatus.OK);
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody UserDto userDto) throws Exception {
+      UserDto userLogin =  userService.loadUserByEmail(userDto);
+        return new ResponseEntity(userLogin,HttpStatus.OK);
     }
 
-    @PostMapping("/auth/forgot-password")
-    public ResponseEntity forgotPassword(@RequestBody ForgotPasswordModel forgotPasswordModel) {
+    @PostMapping("/forgot-password")
+    public ResponseEntity forgotPassword(@RequestBody ForgotPasswordModel forgotPasswordModel) throws Exception {
         userService.loadUserByEmail(forgotPasswordModel.getEmail());
         return new ResponseEntity(HttpStatus.OK);
     }

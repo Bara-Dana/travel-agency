@@ -1,11 +1,17 @@
 package com.proiect.travel.agency.dto;
 
+import com.proiect.travel.agency.entity.CountryModel;
+
 public class DestinationDto {
     private Long id;
     private String name;
     private String description;
+
     private CountryDto country;
 
+    public Long getId() {
+        return id;
+    }
 
     public CountryDto getCountry() {
         return country;
@@ -13,10 +19,6 @@ public class DestinationDto {
 
     public void setCountry(CountryDto country) {
         this.country = country;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setId(Long id) {
