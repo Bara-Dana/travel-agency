@@ -12,10 +12,6 @@ import java.util.List;
 @Repository
 public interface OfferRepository extends JpaRepository<OfferModel, Long> {
 
-//    @Query("  from OfferModel as offers join offers.destination as destinations " +
-//            "where destinations.id = :destinationId and offers.pricePerNight < :maxPrice")
-//    List<OfferModel> findOffers(@Param("maxPrice") String maxPrice,
-//                                @Param("destinationId") long destinationId);
 
     @Query("   from OfferModel as offers where offers.pricePerNight <= :price")
     List<OfferModel> findPrice(@Param("price") double price);
